@@ -1,0 +1,187 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 91.25%;
+  margin: 18px auto;
+  color: #ffffff;
+}
+
+.header__movies {
+  display: none;
+  margin: 0 0 0 50px;
+  padding: 0;
+  align-items: center;
+  justify-content: space-between;
+  width: 212px;
+}
+
+.header__movie {
+  line-height: 18px;
+  font-size: 13px;
+  font-weight: 400;
+  padding: 0;
+  margin: 0;
+  color: #ffffff;
+  text-decoration: none;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+.header__movie:hover {
+  opacity: 0.8;
+}
+
+.header__movie_active {
+  font-weight: 500;
+}
+
+.header__account {
+  display: none;
+  margin: 0 5px 0 0;
+  padding: 0;
+}
+
+.header__sign {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  line-height: 16px;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.header__signup {
+  margin-right: 15px;
+  color: #ffffff;
+  text-decoration: none;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+.header__signup:hover {
+  opacity: 0.8;
+}
+
+.header__signin {
+  padding: 5px 12px;
+  color: #000000;
+  text-decoration: none;
+  background-color: #3ddc84;
+  border-radius: 3px;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+.header__signin:hover {
+  opacity: 0.8;
+}
+.header__burger {
+  align-items: center;
+  background-color: transparent;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  padding: 0;
+  margin: 0;
+  width: 21px;
+  height: 20px;
+  margin-right: 10px;
+  position: relative;
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.header__burger:hover {
+  opacity: 0.8;
+}
+
+.header__burger span {
+  position: absolute;
+  top: 9px;
+  left: 0;
+  width: 21px;
+  height: 2px;
+  background-color: #ffffff;
+}
+
+.header__burger::before {
+  content: " ";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 21px;
+  height: 2px;
+  background-color: #ffffff;
+}
+
+.header__burger::after {
+  content: " ";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 21px;
+  height: 2px;
+  background-color: #ffffff;
+}
+
+@media screen and (min-width: 322px) {
+  .header__sign {
+    line-height: 16px;
+    font-size: 12px;
+  }
+
+  .header__signup {
+    margin-right: 30px;
+  }
+  
+  .header__signin {
+    padding: 8px 20px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .header {
+    width: 92.1875%;
+  }
+
+  .header__burger {
+    width: 27px;
+    height: 24px;
+    margin-right: 9px;
+  }
+
+  .header__burger span {
+    top: 11px;
+    width: 27px;
+    height: 3px;
+  }
+
+  .header__burger::before {
+    width: 27px;
+    height: 3px;
+  }
+
+  .header__burger::after {
+    width: 27px;
+    height: 3px;
+  }
+}
+
+@media screen and (min-width: 1047px) {
+  .header {
+    max-width: 1140px;
+  }
+  .header__movies {
+    display: flex;
+  }
+  .header__account {
+    display: flex;
+  }
+  .header__burger {
+    display: none;
+  }
+}

@@ -1,0 +1,34 @@
+.account__link {
+  align-items: center;
+  background-color: transparent;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  text-align: center;
+  line-height: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.account__link:hover {
+  opacity: 0.8;
+}
+
+.account__link::after {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  content: url(../../images/icon-main.svg);
+  width: 24px;
+  height: 24px;
+  border-radius: 12px;
+  background-color: #313131;
+  margin-left: 9px;
+}

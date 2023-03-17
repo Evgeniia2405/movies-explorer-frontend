@@ -1,0 +1,131 @@
+.menu {
+  display: flex;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  right: 0px;
+  top: 0px;
+  justify-content: flex-end;
+  transform: translateX(100%);
+  transition: all 0.4s;
+}
+
+.menu_active {
+  transform: translateX(0);
+}
+
+.menu__background {
+  display: none;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000000;
+  opacity: 0.8;
+  position: absolute;
+  z-index: 0;
+}
+.menu__background_active {
+  display: flex;
+}
+
+.menu__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 67.71%;
+  min-width: 320px;
+  max-width: 520px;
+  height: 100vh;
+  background-color: #202020;
+  z-index: 1;
+}
+
+.menu__close {
+  width: 30px;
+  height: 30px;
+  background-size: cover;
+  background-image: url(../../images/close_btn.svg);
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  padding: 0;
+  border: none;
+  font: inherit;
+  color: inherit;
+  background-color: transparent;
+  outline: none;
+  box-shadow: none;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  align-self: end;
+  margin-right: 14px;
+  margin-top: 14px;
+}
+
+.menu__close:hover {
+  opacity: 0.6;
+}
+
+.menu__main {
+  flex: 1 1 auto;
+}
+
+.menu__items {
+  display: flex;
+  flex-direction: column;
+  list-style-type: none;
+  margin: 100px auto 46px;
+  padding: 0;
+  line-height: 21.78px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #ffffff;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.menu__item {
+  display: flex;
+  margin-bottom: 23px;
+  align-content: center;
+}
+
+.menu__link {
+  padding: 0;
+  margin: 0;
+  color: #ffffff;
+  display: flex;
+  text-decoration: none;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 4px;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+.menu__link:hover {
+  opacity: 0.8;
+}
+
+.menu__link_active {
+  border-bottom: 2px solid #FFFFFF;
+  }
+
+.menu__footer {
+  align-self: center;
+  padding: 0;
+  margin-bottom: 46px;
+}
+
+
+@media screen and (min-width: 768px) {
+  .menu__close {
+    margin-right: 23px;
+    margin-top: 23px;
+  }
+  .menu__items {
+    margin-top: 106px;
+  }
+}
