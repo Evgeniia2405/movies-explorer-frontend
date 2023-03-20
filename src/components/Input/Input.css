@@ -1,0 +1,48 @@
+.input__label {
+  display: flex;
+  line-height: 12.1px;
+  font-size: 10px;
+  font-weight: 400;
+  color: #8b8b8b;
+}
+
+.input__placeholder {
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  margin: 7px 0 12px 0;
+  padding: 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #424242;
+  color: #ffffff;
+  line-height: 16.94px;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.input__placeholder_invalid {
+  color: #ee3465;
+}
+
+.input__placeholder:focus {
+  outline: none;
+  border-bottom: 1px solid #4285f4;
+}
+
+.input__span {
+  padding: 0px;
+  margin: 0;
+  display: flex;
+  line-height: 12.1px;
+  font-size: 10px;
+  font-weight: 400;
+  color: #ee3465;
+  opacity: 0;
+  min-height: 12.1px;
+}
+
+.input__span_visible {
+  opacity: 1;
+}
+
+

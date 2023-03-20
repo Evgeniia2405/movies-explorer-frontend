@@ -1,0 +1,10 @@
+.logo {
+  width: 38px;
+  height: 38px;
+  background-image: url(../../images/logo-header.svg);
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+  background-repeat: no-repeat;
+  background-position: center;
+}

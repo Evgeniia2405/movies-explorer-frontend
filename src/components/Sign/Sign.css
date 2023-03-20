@@ -1,0 +1,72 @@
+.sign__header {
+  display: flex;
+  margin: 55px auto 30px auto;
+  width: 81.25%;
+  justify-content: center;
+}
+
+.sign__text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 14.52px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #8b8b8b;
+  margin: 3px auto 18px auto;
+}
+
+.sign__link {
+  text-decoration: none;
+  cursor: pointer;
+  color: #4285f4;
+  line-height: 14.52px;
+  font-size: 12px;
+  font-weight: 400;
+  margin-left: 5px;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.sign__link:hover {
+  opacity: 1;
+}
+
+@media screen and (min-width: 768px) {
+  .sign__header {
+    width: 51.5625%;
+    justify-content: start;
+    margin-top: 22.5vh;
+    margin-bottom: 0;
+    max-width: 396px;
+  }
+
+  .sign__text {
+    line-height: 16.94px;
+    font-size: 14px;
+    margin-top: 3px;
+    margin-bottom: 21vh;
+  }
+  .sign__link {
+    line-height: 16.94px;
+    font-size: 14px;
+  }
+}
+
+@media screen and (min-width: 850px) {
+  .sign__header {
+    margin-top: 16vh;
+  }
+  .sign__text {
+    margin-bottom: 14vh;
+  }
+}
+
+@media screen and (min-width: 960px) {
+  .sign__header {
+    margin-top: 10vh;
+  }
+  .sign__text {
+    margin-bottom: 8vh;
+  }
+}
