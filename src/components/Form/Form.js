@@ -4,9 +4,10 @@ import "./Form.css";
 function Form(props) {
   return (
     <>
-      <form className="form">
+      <form className="form" onSubmit={props.onSubmit}>
         <h2 className="form__title">{props.title}</h2>
         <div className="form__inputs">{props.children}</div>
+        {props.serverMessage ? <p className="form__text">{props.serverMessage}</p> : ''}
         <button
           className={
             !props.formValid

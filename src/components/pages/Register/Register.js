@@ -1,84 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Form from "../../Form/Form";
 import Input from "../../Input/Input";
 import Sign from "../../Sign/Sign";
+import { useInput } from "../../../hooks/useForm";
+import Preloader from "../../Preloader/Preloader";
 
-function RegisterI() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+function Register({ onRegistr, serverMessage, isLoading }) {
+  const name = useInput("", {
+    isEmpty: true,
+    minLength: 2,
+    maxLength: 30,
+    isName: true,
+  });
+  const email = useInput("", { isEmpty: true, isEmail: true });
+  const password = useInput("", { isEmpty: true, minLength: 3 });
 
-  const [nameDirty, setNameDirty] = useState(false);
-  const [emailDirty, setEmailDirty] = useState(false);
-  const [passwordDirty, setPasswordDirty] = useState(false);
-
-  const [nameError, setNameError] = useState("Обязательное поле");
-  const [emailError, setEmailError] = useState("Обязательное поле");
-  const [passwordError, setPasswordError] = useState("Что-то пошло не так...");
-
-  const [formValid, setFormValid] = useState(false);
-
-  useEffect(() => {
-    if (nameError || emailError || passwordError) {
-      setFormValid(false);
-    } else {
-      setFormValid(true);
-    }
-  }, [nameError, emailError, passwordError]);
-
-  const nameHandler = (e) => {
-    setName(e.target.value);
-    if (e.target.value.length < 2 || e.target.value.length > 30) {
-      setNameError("Имя должно быть длиннее 2 и менее 30 знаков");
-      if (!e.target.value) {
-        setNameError("Обязательное поле");
-      }
-    } else {
-      setNameError("");
-    }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onRegistr(name.value, email.value, password.value);
   };
 
-  const emailHandler = (e) => {
-    setEmail(e.target.value);
-    const re =
-      /^(([^<>()[\]\\.,;:\s@]+(\.[^<>()[\]\\.,;:\s@"]+)*))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (!re.test(String(e.target.value).toLowerCase())) {
-      setEmailError("Некорректный email");
-      if (!e.target.value) {
-        setEmailError("Обязательное поле");
-      }
-    } else {
-      setEmailError("");
-    }
-  };
-
-  const passwordHandler = (e) => {
-    setPassword(e.target.value);
-    if (e.target.value.length < 6) {
-      setPasswordError("Пароль должен быть более 6 знаков");
-      if (!e.target.value) {
-        setPasswordError("Обязательное поле");
-      }
-    } else {
-      setPasswordError("");
-    }
-  };
-
-  const blurHandler = (e) => {
-    switch (e.target.name) {
-      case "name":
-        setNameDirty(true);
-        break;
-      case "email":
-        setEmailDirty(true);
-        break;
-      case "password":
-        setPasswordDirty(true);
-        break;
-      default:
-      // do nothing
-    }
-  };
   return (
     <>
       <Sign
@@ -88,47 +29,79 @@ function RegisterI() {
         children={
           <Form
             title="Добро пожаловать!"
+            onSubmit={handleSubmit}
+            serverMessage={serverMessage}
             children={
               <>
                 <Input
                   title="Имя"
                   name="name"
-                  value={name}
-                  onChange={(e) => nameHandler(e)}
-                  onBlur={(e) => blurHandler(e)}
-                  dirty={nameDirty}
-                  error={nameError}
+                  value={name.value}
+                  onChange={(e) => name.onChange(e)}
+                  onBlur={(e) => name.onBlur(e)}
+                  dirty={name.isDirty}
+                  error={
+                    (name.isDirty && name.isEmpty.state
+                      ? name.isEmpty.textError
+                      : "") ||
+                    (name.isDirty && name.minLengthError.state
+                      ? name.minLengthError.textError
+                      : "") ||
+                    (name.isDirty && name.maxLengthError.state
+                      ? name.maxLengthError.textError
+                      : "") ||
+                    (name.isDirty && name.nameError.state
+                      ? name.nameError.textError
+                      : "")
+                  }
                   type={"text"}
                 />
                 <Input
                   title="E-mail"
                   name="email"
-                  value={email}
-                  onChange={(e) => emailHandler(e)}
-                  onBlur={(e) => blurHandler(e)}
-                  dirty={emailDirty}
-                  error={emailError}
+                  value={email.value}
+                  onChange={(e) => email.onChange(e)}
+                  onBlur={(e) => email.onBlur(e)}
+                  dirty={email.isDirty}
+                  error={
+                    (email.isDirty && email.isEmpty.state
+                      ? email.isEmpty.textError
+                      : "") ||
+                    (email.isDirty && email.emailError.state
+                      ? email.emailError.textError
+                      : "")
+                  }
                   type={"text"}
                 />
                 <Input
                   title="Пароль"
                   name="password"
-                  value={password}
-                  onChange={(e) => passwordHandler(e)}
-                  onBlur={(e) => blurHandler(e)}
-                  dirty={passwordDirty}
-                  error={passwordError}
+                  value={password.value}
+                  onChange={(e) => password.onChange(e)}
+                  onBlur={(e) => password.onBlur(e)}
+                  dirty={password.isDirty}
+                  error={
+                    (password.isDirty && password.isEmpty.state
+                      ? email.isEmpty.textError
+                      : "") ||
+                    (password.isDirty && password.minLengthError.state
+                      ? password.minLengthError.textError
+                      : "")
+                  }
                   type={"password"}
                 />
               </>
             }
-            formValid={formValid}
+            formValid={
+              name.inputValid && email.inputValid && password.inputValid
+            }
             button="Зарегистрироваться"
           />
         }
       />
+      <Preloader isLoading={isLoading} />
     </>
   );
 }
 
-export default RegisterI;
+export default Register;

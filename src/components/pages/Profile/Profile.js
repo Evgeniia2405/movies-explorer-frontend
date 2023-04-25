@@ -1,91 +1,65 @@
-import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import Header from "../../Header/Header";
-import Menu from "../../Menu/Menu";
-import { dataMenu } from "../../../utils/dataMenu";
-
+import React, { useState, useContext, useEffect } from "react";
+import { CurrentUserContext } from "../../../contexts/CurrentUserContext";
 import "./Profile.css";
+import { useInput } from "../../../hooks/useForm";
+import Preloader from "../../Preloader/Preloader";
 
-function Profile({ active, setActive }) {
-  const [name, setName] = useState("Виталий");
-  const [email, setEmail] = useState("pochta@yandex.ru");
-
-  const [nameDirty, setNameDirty] = useState(false);
-  const [emailDirty, setEmailDirty] = useState(false);
-
-  const [nameError, setNameError] = useState("Обязательное поле");
-  const [emailError, setEmailError] = useState("Обязательное поле");
-
-  const [formValid, setFormValid] = useState(false);
-
-  const history = useHistory();
-
-  function signOut() {
-    history.push("/signin");
-  }
+function Profile({ onEdit, onSignOut, serverMessage, isLoading }) {
+  const currentUser = useContext(CurrentUserContext);
+  const [message, setMessage] = useState(serverMessage);
+  const name = useInput(currentUser.name || "", {
+    isEmpty: true,
+    minLength: 2,
+    maxLength: 30,
+    isName: true,
+  });
+  const email = useInput(currentUser.email || "", {
+    isEmpty: true,
+    isEmail: true,
+  });
 
   useEffect(() => {
-    if (nameError || emailError) {
-      setFormValid(false);
-    } else {
-      setFormValid(true);
-    }
-  }, [nameError, emailError]);
+    setMessage("");
+  }, []);
 
-  const nameHandler = (e) => {
-    setName(e.target.value);
-    if (e.target.value.length < 2 || e.target.value.length > 30) {
-      setNameError("Имя должно быть длиннее 2 и менее 30 знаков");
-      if (!e.target.value) {
-        setNameError("Обязательное поле");
-      }
-    } else {
-      setNameError("");
-    }
+  useEffect(() => {
+    setMessage(serverMessage);
+    setTimeout(clearMessage, 2500);
+  }, [serverMessage]);
+
+  function clearMessage() {
+    setMessage("");
+  }
+
+  function signOut() {
+    onSignOut();
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onEdit(name.value, email.value);
   };
 
-  const emailHandler = (e) => {
-    setEmail(e.target.value);
-    const re =
-      /^(([^<>()[\]\\.,;:\s@]+(\.[^<>()[\]\\.,;:\s@"]+)*))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (!re.test(String(e.target.value).toLowerCase())) {
-      setEmailError("Некорректный email");
-      if (!e.target.value) {
-        setEmailError("Обязательное поле");
-      }
-    } else {
-      setEmailError("");
-    }
-  };
-
-  const blurHandler = (e) => {
-    switch (e.target.name) {
-      case "name":
-        setNameDirty(true);
-        break;
-      case "email":
-        setEmailDirty(true);
-        break;
-      default:
-      // do nothing
-    }
-  };
   return (
     <>
-      <Header menuActive={active} setMenuActive={setActive} />
-      <form className="profile__form">
-        <h2 className="profile__title">Привет, {name}!</h2>
+      <form onSubmit={handleSubmit} className="profile__form">
+        <h2 className="profile__title">Привет, {currentUser.name}!</h2>
         <div className="profile__inputs">
           <div className="profile__input">
             <label className="profile__label" htmlFor="name">
               Имя
             </label>
             <input
-              value={name}
-              onChange={(e) => nameHandler(e)}
-              onBlur={(e) => blurHandler(e)}
+              value={name.value}
+              onChange={(e) => name.onChange(e)}
+              onBlur={(e) => name.onBlur(e)}
+              dirty={name.isDirty ? 1 : 0}
               className={
-                nameDirty && nameError
+                name.isDirty &&
+                (name.isEmpty.state ||
+                  name.minLengthError.state ||
+                  name.nameError.state ||
+                  name.maxLengthError.state)
                   ? "profile__placeholder profile__placeholder_invalid"
                   : "profile__placeholder"
               }
@@ -94,12 +68,20 @@ function Profile({ active, setActive }) {
             />
             <span
               className={
-                nameDirty && nameError
+                name.isDirty &&
+                (name.isEmpty.state ||
+                  name.minLengthError.state ||
+                  name.nameError.state ||
+                  name.maxLengthError.state)
                   ? "input__span input__span_visible"
                   : "input__span"
               }
             >
-              {nameError || " "}
+              {name.isEmpty.textError ||
+                name.minLengthError.textError ||
+                name.maxLengthError.textError ||
+                name.nameError.textError ||
+                " "}
             </span>
           </div>
           <div className="profile__input">
@@ -107,11 +89,12 @@ function Profile({ active, setActive }) {
               E-mail
             </label>
             <input
-              value={email}
-              onChange={(e) => emailHandler(e)}
-              onBlur={(e) => blurHandler(e)}
+              value={email.value}
+              onChange={(e) => email.onChange(e)}
+              onBlur={(e) => email.onBlur(e)}
+              dirty={email.isDirty ? 1 : 0}
               className={
-                emailDirty && emailError
+                email.isDirty && (email.isEmpty.state || email.emailError.state)
                   ? "profile__placeholder profile__placeholder_invalid profile__placeholder_noborder"
                   : "profile__placeholder profile__placeholder_noborder"
               }
@@ -120,33 +103,40 @@ function Profile({ active, setActive }) {
             />
             <span
               className={
-                emailDirty && emailError
+                email.isDirty && (email.isEmpty.state || email.emailError.state)
                   ? "profile__span profile__span_visible"
                   : "profile__span"
               }
             >
-              {emailError || " "}
+              {email.emailError.textError || email.isEmpty.textError || " "}
             </span>
           </div>
         </div>
+        {message ? <p className="form__text">{message}</p> : ""}
         <button
           className={
-            !formValid
+            (name.value === currentUser.name &&
+              email.value === currentUser.email) ||
+            !name.inputValid ||
+            !email.inputValid
               ? "profile__button profile__button_disabled"
               : "profile__button"
           }
-          disabled={!formValid}
+          disabled={
+            (name.value === currentUser.name &&
+              email.value === currentUser.email) ||
+            !name.inputValid ||
+            !email.inputValid
+          }
           type="submit"
         >
           Редактировать
         </button>
       </form>
-
-      <button onClick={signOut} className="profile__button profile__out">
+      <button onClick={signOut} className="profile__out">
         Выйти из аккаунта
       </button>
-
-      <Menu items={dataMenu} active={active} setActive={setActive} />
+      <Preloader isLoading={isLoading} />
     </>
   );
 }

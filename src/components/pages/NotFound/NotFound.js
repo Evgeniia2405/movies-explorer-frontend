@@ -1,19 +1,18 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import Preloader from "../../Preloader/Preloader";
+import { useNavigate } from "react-router-dom";
 import "./NotFound.css";
 
 function NotFound() {
+  const navigate = useNavigate();
 
   return (
     <>
       <div className="content">
         <h2 className="content__title">404</h2>
         <p className="content__text">Страница не найдена</p>
-        </div>
-        <Link to="/" className="content__link">
+      </div>
+      <p onClick={() => navigate(-1)} className="content__link">
         Назад
-        </Link>
+      </p>
     </>
   );
 }

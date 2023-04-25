@@ -6,6 +6,7 @@
   width: 81.25%;
   margin: 0 auto;
   color: #ffffff;
+  position: relative;
 }
 
 .form__title {
@@ -15,12 +16,20 @@
   font-weight: 500;
   margin: 20px auto 80px auto;
 }
+
 .form__inputs {
+  display: flex;
+  flex-direction: column;
   width: 81.25%;
   min-width: 260px;
   flex: 1 1 auto;
 }
-
+.form__text {
+  line-height: 14.52px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #ee3465;
+}
 .form__button {
   box-sizing: border-box;
   justify-content: center;

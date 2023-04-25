@@ -41,6 +41,10 @@
   transition: opacity 0.3s ease;
 }
 
+.cards__btn_disactive {
+  display: none;
+}
+
 .cards__btn:hover {
   opacity: 0.8;
 }

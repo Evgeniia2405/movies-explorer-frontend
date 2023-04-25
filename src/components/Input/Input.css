@@ -6,6 +6,15 @@
   color: #8b8b8b;
 }
 
+.input__label_prof {
+  position: relative;
+  top: 14px;
+  line-height: 13.31px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
 .input__placeholder {
   width: 100%;
   background-color: transparent;
@@ -20,6 +29,26 @@
   font-weight: 400;
 }
 
+.input__placeholder_prof {
+  cursor: pointer;
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  margin: 7px 0 12px 0;
+  margin: 0 auto;
+  padding: 0;
+  padding-bottom: 12px;
+  color: #ffffff;
+  line-height: 13.31px;
+  font-size: 11px;
+  font-weight: 400;
+  text-align: end;
+  border-bottom: 1px solid #424242;
+}
+.input__placeholder_prof:focus {
+  outline: none;
+  border-bottom: 1px solid #4285f4;
+}
 .input__placeholder_invalid {
   color: #ee3465;
 }
@@ -31,7 +60,7 @@
 
 .input__span {
   padding: 0px;
-  margin: 0;
+  margin: 3px 0 0 0;
   display: flex;
   line-height: 12.1px;
   font-size: 10px;
@@ -39,6 +68,8 @@
   color: #ee3465;
   opacity: 0;
   min-height: 12.1px;
+  position: relative;
+  top: -14px;
 }
 
 .input__span_visible {
