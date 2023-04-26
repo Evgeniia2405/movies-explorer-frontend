@@ -104,6 +104,7 @@ function Movies({ countCards }) {
   //проверка для визуализации кнопки "еще" при измении списка текущих фильмов
   useEffect(() => {
     if (currentMovies.length !== 0) {
+      checkMore(currentMovies);
     }
   }, [currentMovies]);
 
