@@ -17,7 +17,7 @@ function Movies({ countCards }) {
   const [filteredMovies, setFilteredMovies] = useState(moviesFoundLS);
   const [currentMovies, setCurrentMovies] = useState([]);
   const [savedMovies, setSavedMovies] = useState([]);
-  const [isShorts, setIsShorts] = useState(isShortsLS);
+  const [isShorts, setIsShorts] = useState(false);
   const [onSuccess, setOnSuccess] = useState(false);
   const [searchMessage, setSearchMessage] = useState(" ");
   const [onMore, setOnMore] = useState(false);
@@ -60,6 +60,13 @@ function Movies({ countCards }) {
     if (allMoviesLS) {
       if (moviesFoundLS) {
         setCurrentMovies(moviesFoundLS.slice(0, countCards.countRender));
+        if (isShortsLS) {
+          setChecked(true);
+          setIsShorts(true);
+        } else {
+          setChecked(false);
+          setIsShorts(false);
+        }
       }
     } else {
       getMovies();
@@ -97,7 +104,6 @@ function Movies({ countCards }) {
   //проверка для визуализации кнопки "еще" при измении списка текущих фильмов
   useEffect(() => {
     if (currentMovies.length !== 0) {
-      checkMore(currentMovies);
     }
   }, [currentMovies]);
 
@@ -109,7 +115,7 @@ function Movies({ countCards }) {
   //если найденных фильмов больше чем отрисовано на странице, то показываем кнопку "еще"
   //проверка для полнометражных и короткометражных фильмов
   function checkMore(movies) {
-    if (!checked) {
+    if (checked) {
       if (movies.length < moviesFoundLS.length) {
         setOnMore(true);
       } else {
@@ -127,26 +133,28 @@ function Movies({ countCards }) {
     }
   }
 
-  //проверка на наличие короткометражных фильмов 
+  //проверка на наличие короткометражных фильмов
   function checkIsShortsMovies(movies) {
     if (movies.some((movie) => movie.duration <= 40)) {
-      setIsShorts(true);
       localStorage.setItem("isShorts", true);
+      setChecked(true);
+      setIsShorts(true);
     } else {
-      localStorage.setItem("isShorts", false);
+      localStorage.removeItem("isShorts");
+      setChecked(false);
       setIsShorts(false);
     }
   }
 
   function handleToggle() {
     if (checked) {
-      renderMovies(moviesFoundLS);
-      setChecked(false);
-    } else {
       const shotsMoviesLS = moviesFoundLS.filter(
         (movie) => movie.duration <= 40
       );
       renderMovies(shotsMoviesLS);
+      setChecked(false);
+    } else {
+      renderMovies(moviesFoundLS);
       setChecked(true);
     }
   }

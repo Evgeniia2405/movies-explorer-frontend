@@ -37,6 +37,7 @@ function SavedMovies() {
         } else {
           localStorage.setItem("moviesSaved", JSON.stringify(data));
           localStorage.setItem("moviesSavedPageSM", JSON.stringify(data));
+          checkIsShortsMovies(data);
         }
       })
       .catch((err) => {
@@ -86,22 +87,22 @@ function SavedMovies() {
   function checkIsShortsMovies(movies) {
     if (movies.some((movie) => movie.duration <= 40)) {
       setIsShorts(true);
-      localStorage.setItem("isShortsSaved", true);
+      setChecked(true);
     } else {
-      localStorage.setItem("isShortsSaved", false);
       setIsShorts(false);
+      setChecked(false);
     }
   }
 
   function handleToggle() {
     if (checked) {
-      renderMovies(moviesFoundSavedLS);
-      setChecked(false);
-    } else {
       const shotsMovies = moviesFoundSavedLS.filter(
         (movie) => movie.duration <= 40
       );
       renderMovies(shotsMovies);
+      setChecked(false);
+    } else {
+      renderMovies(moviesFoundSavedLS);
       setChecked(true);
     }
   }
