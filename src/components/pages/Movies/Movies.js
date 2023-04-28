@@ -156,6 +156,7 @@ function Movies({ countCards }) {
       setOnSuccess(false);
       setSearchMessage("Фильмы не найдены");
       setCurrentMovies([]);
+      setOnMore(false);
     }
   }
 
