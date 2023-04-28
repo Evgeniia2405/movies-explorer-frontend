@@ -12,6 +12,7 @@ import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import api from "../../utils/MainApi";
 import * as auth from "../../utils/MainAuth";
 import ProtectedUnAuthRoute from "../ProtectedRoute/ProtectedUnAuthRoute";
+import { dataСountRender } from "../../utils/dataСountRender";
 import Header from "../Header/Header";
 
 function App() {
@@ -26,13 +27,13 @@ function App() {
       setWindowWidth(window.screen.width);
     };
     if (windowWidth < 675) {
-      setCountCards({ countRender: 5, moreFilms: 2 });
+      setCountCards(dataСountRender[2]);
     }
     if (windowWidth >= 675) {
-      setCountCards({ countRender: 8, moreFilms: 2 });
+      setCountCards(dataСountRender[1]);
     }
     if (windowWidth >= 1233) {
-      setCountCards({ countRender: 12, moreFilms: 3 });
+      setCountCards(dataСountRender[0]);
     }
     return () => {
       window.onresize = false;
@@ -46,6 +47,7 @@ function App() {
     if (localStorage.getItem("jwt")) {
       handleCheckToken();
     }
+    console.log('sss', dataСountRender[2],dataСountRender[1],dataСountRender[0])
   }, []);
 
   useEffect(() => {
