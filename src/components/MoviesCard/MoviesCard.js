@@ -18,7 +18,7 @@ function MoviesCard(props) {
       <div className="card__header">
         <h2 className="card__title">{data.nameRU}</h2>
         <div className="card__duration">
-          {data.duration > 60 ? `${hours} ч ${minutes} мин` : `${minutes} мин`}
+          {data.duration >= 60 ? `${hours} ч ${minutes} мин` : `${minutes} мин`}
         </div>
       </div>
       <a
