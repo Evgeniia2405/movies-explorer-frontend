@@ -43,25 +43,6 @@ function App() {
   const navigate = useNavigate();
   let location = useLocation();
 
-  function handleCheckToken() {
-    const token = localStorage.getItem("jwt");
-    auth
-      .getContent(token)
-      .then((res) => {
-        if (res) {
-          setLoggedIn(true);
-          setCurrentUser(res);
-          navigate("/movies");
-        }
-      })
-      .catch((err) => {
-        setLoggedIn(false);
-        setCurrentUser({});
-        localStorage.removeItem("jwt");
-        setServerMessage("Ошибка при получении token", err);
-      });
-  }
-
   useEffect(() => {
     if (localStorage.getItem("jwt")) {
       handleCheckToken();
@@ -80,6 +61,24 @@ function App() {
         });
     }
   }, [loggedIn]);
+
+  function handleCheckToken() {
+    const token = localStorage.getItem("jwt");
+    auth
+      .getContent(token)
+      .then((res) => {
+        if (res) {
+          setCurrentUser(res);
+          setLoggedIn(true);
+        }
+      })
+      .catch((err) => {
+        setLoggedIn(false);
+        setCurrentUser({});
+        localStorage.removeItem("jwt");
+        setServerMessage("Ошибка при получении token", err);
+      });
+  }
 
   function handleRegistr(name, email, password) {
     setIsLoading(true);
@@ -107,8 +106,9 @@ function App() {
       .then((res) => {
         if (res.token) {
           localStorage.setItem("jwt", res.token);
-          handleCheckToken();
+          // handleCheckToken();
         }
+        setLoggedIn(true);
         navigate("/movies");
       })
       .catch((err) => {
@@ -191,6 +191,7 @@ function App() {
                   component={Movies}
                   countCards={countCards}
                   loggedIn={loggedIn}
+                  pathRedirect="/movies"
                 />
               }
             />
@@ -200,6 +201,7 @@ function App() {
                 <ProtectedUnAuthRoute
                   component={SavedMovies}
                   loggedIn={loggedIn}
+                  pathRedirect="/saved-movies"
                 />
               }
             />
@@ -213,6 +215,7 @@ function App() {
                   onEdit={handleUpdateUser}
                   onSignOut={handleSignOut}
                   isLoading={isLoading}
+                  pathRedirect="/profile"
                 />
               }
             />
