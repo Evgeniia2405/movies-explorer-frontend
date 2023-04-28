@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { CurrentUserContext } from "../../../contexts/CurrentUserContext";
 import "./Profile.css";
 import { useInput } from "../../../hooks/useForm";
@@ -6,7 +6,6 @@ import Preloader from "../../Preloader/Preloader";
 
 function Profile({ onEdit, onSignOut, serverMessage, isLoading }) {
   const currentUser = useContext(CurrentUserContext);
-  const [message, setMessage] = useState(serverMessage);
   const name = useInput(currentUser.name || "", {
     isEmpty: true,
     minLength: 2,
@@ -17,19 +16,6 @@ function Profile({ onEdit, onSignOut, serverMessage, isLoading }) {
     isEmpty: true,
     isEmail: true,
   });
-
-  useEffect(() => {
-    setMessage("");
-  }, []);
-
-  useEffect(() => {
-    setMessage(serverMessage);
-    setTimeout(clearMessage, 2500);
-  }, [serverMessage]);
-
-  function clearMessage() {
-    setMessage("");
-  }
 
   function signOut() {
     onSignOut();
@@ -112,7 +98,14 @@ function Profile({ onEdit, onSignOut, serverMessage, isLoading }) {
             </span>
           </div>
         </div>
-        {message ? <p className="form__text">{message}</p> : ""}
+        {(name.value === currentUser.name &&
+          email.value === currentUser.email) ||
+        !name.inputValid ||
+        !email.inputValid ? (
+          <p className="form__text">{serverMessage}</p>
+        ) : (
+          ""
+        )}
         <button
           className={
             (name.value === currentUser.name &&
