@@ -47,7 +47,6 @@ function App() {
     if (localStorage.getItem("jwt")) {
       handleCheckToken();
     }
-    console.log('sss', dataСountRender[2],dataСountRender[1],dataСountRender[0])
   }, []);
 
   useEffect(() => {
