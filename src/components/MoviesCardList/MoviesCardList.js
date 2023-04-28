@@ -2,9 +2,13 @@ import React from "react";
 import "./MoviesCardList.css";
 import MoviesCard from "../MoviesCard/MoviesCard";
 
-function MoviesCardList({ movies, onMore, onClickMore, onCardClick }) {
-  const moviesSavedLS = JSON.parse(localStorage.getItem("moviesSaved"));
-
+function MoviesCardList({
+  movies,
+  savedMovies,
+  onMore,
+  onClickMore,
+  onCardClick,
+}) {
   return (
     <div className="cards__wrapper">
       <ul className="cards__list">
@@ -14,8 +18,8 @@ function MoviesCardList({ movies, onMore, onClickMore, onCardClick }) {
             card={data}
             onCardClick={onCardClick}
             isSaved={
-              moviesSavedLS
-                ? moviesSavedLS.some((i) => i.movieId === data.id)
+              savedMovies
+                ? savedMovies.some((i) => i.movieId === data.id)
                 : false
             }
           />

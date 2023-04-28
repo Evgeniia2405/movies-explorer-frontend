@@ -43,8 +43,6 @@ function Movies({ countCards }) {
     api
       .getSavedMovies()
       .then((data) => {
-        localStorage.setItem("moviesSaved", JSON.stringify(data));
-        localStorage.setItem("moviesSavedPM", JSON.stringify(data));
         setSavedMovies(data);
       })
       .catch((err) => {
@@ -73,32 +71,8 @@ function Movies({ countCards }) {
     }
   }, []);
 
-  //запрос к серверу за сохраненными фильмами если ранее это не делали
   useEffect(() => {
-    if (
-      !localStorage.getItem("moviesSaved") &&
-      !localStorage.getItem("moviesSavedPM")
-    ) {
-      getMoviesSaved();
-    }
-  }, []);
-
-  useEffect(() => {
-    if (localStorage.getItem("moviesSaved")) {
-      setSavedMovies(JSON.parse(localStorage.getItem("moviesSaved")));
-    }
-  }, []);
-
-  // если на странице /saved-movies были удалены фильмы то запрашиваем обновленные данные с сервера, в ином случае к серверу не обращаемся.
-  useEffect(() => {
-    if (
-      localStorage.getItem("moviesSaved") &&
-      localStorage.getItem("moviesSavedPM") &&
-      JSON.parse(localStorage.getItem("moviesSaved")).length !==
-        JSON.parse(localStorage.getItem("moviesSavedPM")).length
-    ) {
-      getMoviesSaved();
-    }
+    getMoviesSaved();
   }, []);
 
   //проверка для визуализации кнопки "еще" при измении списка текущих фильмов
@@ -269,6 +243,7 @@ function Movies({ countCards }) {
         <MoviesCardList
           onMore={onMore}
           movies={currentMovies}
+          savedMovies={savedMovies}
           onClickMore={handleMore}
           onCardClick={handleMovieSaveOrDelete}
         />

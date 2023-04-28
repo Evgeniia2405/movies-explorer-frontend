@@ -7,37 +7,103 @@ import api from "../../../utils/MainApi";
 import Preloader from "../../Preloader/Preloader";
 
 function SavedMovies() {
-  const moviesSavedLS = JSON.parse(localStorage.getItem("moviesSaved"));
-  const moviesFoundSavedLS = JSON.parse(
-    localStorage.getItem("moviesFoundSaved")
-  );
-  const textSearchSavedLS = localStorage.getItem("textSearchSaved");
-
-  const [value, setValue] = useState(textSearchSavedLS);
+  const [value, setValue] = useState("");
+  const [initialMovies, isInitialMovies] = useState(false);
+  const [initialFilteredMovies, isInitialFilteredMovies] = useState(false);
+  const [filteredMovies, setFilteredMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [currentMovies, setCurrentMovies] = useState([]);
+  const [savedMovies, setSavedMovies] = useState([]);
   const [isShorts, setIsShorts] = useState(false);
-
   const [onSuccess, setOnSuccess] = useState(false);
   const [searchMessage, setSearchMessage] = useState(" ");
-
   const [checked, setChecked] = useState(false);
+
+  useEffect(() => {
+    getMoviesSaved();
+    isInitialMovies(true);
+  }, []);
+
+  //если в первоначальных сохраненных фильмах есть короткометражки то setChecked(true);
+  useEffect(() => {
+    if (isShorts && initialMovies) {
+      setChecked(true);
+    }
+  }, [initialMovies, isShorts]);
+
+  //если в первоначальных отфильтрованных фильмах есть короткометражки то setChecked(true);
+  useEffect(() => {
+    if (isShorts && initialFilteredMovies) {
+      setChecked(true);
+    }
+  }, [initialFilteredMovies, isShorts]);
+
+  //в случае если удаляются фильмы из отфильтрованных, то показывать отфильтрованные фильмы до тех пор пока они есть
+  useEffect(() => {
+    if (onSuccess) {
+      if (!checked) {
+        if (savedMovies.length > 0) {
+          if (isShorts) {
+            setCurrentMovies(
+              filteredMovies.filter((movie) => movie.duration <= 40)
+            );
+          } else {
+            setCurrentMovies(filteredMovies);
+            //если удалены все короткометражки, то переключаемся на оставшиеся отфильтрованные фильмы
+          }
+        } else {
+          setCurrentMovies([]);
+          setSearchMessage("Фильмы не найдены");
+        }
+      }
+      if (checked) {
+        setCurrentMovies(filteredMovies);
+      }
+    } else {
+      setCurrentMovies([]);
+    }
+  }, [filteredMovies, isShorts, checked, onSuccess, savedMovies.length]);
+
+  //в случае если удаляются фильмы из всех короткометражек, то оставаться в короткометражках пока они есть
+  // если короткометражки закончились, то переключится на оставшиеся сохраненные фильмы
+  useEffect(() => {
+    if (!onSuccess && searchMessage === " ") {
+      if (!checked) {
+        if (savedMovies.length > 0) {
+          if (isShorts) {
+            setCurrentMovies(
+              savedMovies.filter((movie) => movie.duration <= 40)
+            );
+          } else {
+            setCurrentMovies(savedMovies);
+          }
+        } else {
+          setCurrentMovies([]);
+        }
+      }
+      if (checked) {
+        setCurrentMovies(savedMovies);
+      }
+    }
+  }, [savedMovies, isShorts, checked, onSuccess, searchMessage]);
 
   function getMoviesSaved() {
     setIsLoading(true);
     api
       .getSavedMovies()
       .then((data) => {
-        if (data.length === 0) {
-          localStorage.removeItem("textSearchSaved");
-          localStorage.removeItem("moviesSaved");
+        if (data.length > 0) {
+          setSavedMovies(data);
+          checkIsShortsMovies(data);
+          if (value && value !== " " && filteredMovies.length > 0) {
+            isInitialFilteredMovies(false);
+            filterMovies(data, value);
+          }
+        } else {
+          setCurrentMovies([]);
+          setSavedMovies([]);
           setIsShorts(false);
           setChecked(false);
-          setValue("");
-        } else {
-          localStorage.setItem("moviesSaved", JSON.stringify(data));
-          localStorage.setItem("moviesSavedPageSM", JSON.stringify(data));
-          checkIsShortsMovies(data);
         }
       })
       .catch((err) => {
@@ -48,37 +114,6 @@ function SavedMovies() {
       });
   }
 
-  useEffect(() => {
-    if (
-      !localStorage.getItem("moviesSaved") ||
-      !localStorage.getItem("moviesSavedPageSM")
-    ) {
-      getMoviesSaved();
-    }
-  }, []);
-
-  // если на странице /movies были добавлены/удалены фильмы то запрашиваем обновленные данные с сервера, в ином случае к серверу не обращаемся.
-  useEffect(() => {
-    if (
-      localStorage.getItem("moviesSaved") &&
-      localStorage.getItem("moviesSavedPageSM") &&
-      JSON.parse(localStorage.getItem("moviesSaved")).length !==
-        JSON.parse(localStorage.getItem("moviesSavedPageSM")).length
-    ) {
-      getMoviesSaved();
-    }
-  }, []);
-
-  useEffect(() => {
-    if (
-      localStorage.getItem("moviesSaved") &&
-      JSON.parse(localStorage.getItem("moviesSaved")).length !== 0 &&
-      textSearchSavedLS
-    ) {
-      filterMovies(textSearchSavedLS);
-    }
-  }, []);
-
   function handleChange(e) {
     setValue(e.target.value);
     setSearchMessage(" ");
@@ -87,7 +122,6 @@ function SavedMovies() {
   function checkIsShortsMovies(movies) {
     if (movies.some((movie) => movie.duration <= 40)) {
       setIsShorts(true);
-      setChecked(true);
     } else {
       setIsShorts(false);
       setChecked(false);
@@ -95,35 +129,38 @@ function SavedMovies() {
   }
 
   function handleToggle() {
-    if (checked) {
-      const shotsMovies = moviesFoundSavedLS.filter(
-        (movie) => movie.duration <= 40
-      );
-      renderMovies(shotsMovies);
-      setChecked(false);
+    if (filteredMovies.length > 0) {
+      if (checked) {
+        const shotsMovies = filteredMovies.filter(
+          (movie) => movie.duration <= 40
+        );
+        setCurrentMovies(shotsMovies);
+        setChecked(false);
+      } else {
+        setCurrentMovies(filteredMovies);
+        setChecked(true);
+      }
     } else {
-      renderMovies(moviesFoundSavedLS);
-      setChecked(true);
+      if (checked) {
+        const shotsMovies = savedMovies.filter((movie) => movie.duration <= 40);
+        setCurrentMovies(shotsMovies);
+        setChecked(false);
+      } else {
+        setCurrentMovies(savedMovies);
+        setChecked(true);
+      }
     }
   }
 
-  function renderMovies(movies) {
-    setCurrentMovies(movies);
-  }
-
-  function filterMovies(wordKey) {
-    const filteredMovies = JSON.parse(
-      localStorage.getItem("moviesSaved")
-    ).filter((movie) => {
+  function filterMovies(movies, wordKey) {
+    const filteredMovies = movies.filter((movie) => {
       return (
         movie.nameRU.toLowerCase().includes(wordKey.toLowerCase()) ||
         movie.nameEN.toLowerCase().includes(wordKey.toLowerCase())
       );
     });
     if (filteredMovies.length > 0) {
-      localStorage.setItem("textSearchSaved", wordKey);
-      localStorage.setItem("moviesFoundSaved", JSON.stringify(filteredMovies));
-      renderMovies(filteredMovies);
+      setFilteredMovies(filteredMovies);
       setOnSuccess(true);
       checkIsShortsMovies(filteredMovies);
     } else {
@@ -131,15 +168,17 @@ function SavedMovies() {
       setSearchMessage("Фильмы не найдены");
       setCurrentMovies([]);
       setIsShorts(false);
+      setChecked(false);
     }
   }
 
   function handleSubmit(e) {
     e.preventDefault(e);
     setChecked(false);
-    if (moviesSavedLS && moviesSavedLS.length > 0) {
+    if (savedMovies.length > 0) {
       if (value && value !== " ") {
-        filterMovies(value);
+        isInitialFilteredMovies(true);
+        filterMovies(savedMovies, value);
       } else {
         setSearchMessage("Нужно ввести ключевое слово");
       }
@@ -153,14 +192,18 @@ function SavedMovies() {
   }
 
   function handleMovieDelete(data) {
+    setIsLoading(true);
     api
       .deleteMovie(data._id)
       .then(() => {
+        isInitialMovies(false);
         getMoviesSaved();
-        setCurrentMovies((state) => state.filter((c) => c._id !== data._id));
       })
       .catch((err) => {
         setSearchMessage(`Ошибка при удалении фильма из избранных: ${err}`);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }
 
