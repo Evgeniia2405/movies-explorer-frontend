@@ -12,7 +12,6 @@ import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import api from "../../utils/MainApi";
 import * as auth from "../../utils/MainAuth";
 import ProtectedUnAuthRoute from "../ProtectedRoute/ProtectedUnAuthRoute";
-import ProtectedAuthRoute from "../ProtectedRoute/ProtectedAuthRoute";
 import Header from "../Header/Header";
 
 function App() {
@@ -106,7 +105,6 @@ function App() {
       .then((res) => {
         if (res.token) {
           localStorage.setItem("jwt", res.token);
-          // handleCheckToken();
         }
         setLoggedIn(true);
         navigate("/movies");
@@ -161,10 +159,9 @@ function App() {
           <Routes>
             <Route exact path="/" element={<Main />} />
             <Route
-              path="/signup"
+              path={loggedIn ? "/" : "/signup"}
               element={
-                <ProtectedAuthRoute
-                  component={Register}
+                <Register
                   onRegistr={handleRegistr}
                   serverMessage={serverMessage}
                   isLoading={isLoading}
@@ -173,10 +170,9 @@ function App() {
               }
             />
             <Route
-              path="/signin"
+              path={loggedIn ? "/" : "/signin"}
               element={
-                <ProtectedAuthRoute
-                  component={Login}
+                <Login
                   onLogin={handleLogin}
                   serverMessage={serverMessage}
                   isLoading={isLoading}
@@ -185,7 +181,7 @@ function App() {
               }
             />
             <Route
-              path="/movies"
+              path={loggedIn ? "/movies" : "/"}
               element={
                 <ProtectedUnAuthRoute
                   component={Movies}
@@ -196,7 +192,7 @@ function App() {
               }
             />
             <Route
-              path="/saved-movies"
+              path={loggedIn ? "/saved-movies" : "/"}
               element={
                 <ProtectedUnAuthRoute
                   component={SavedMovies}
@@ -206,7 +202,7 @@ function App() {
               }
             />
             <Route
-              path="/profile"
+              path={loggedIn ? "/profile" : "/"}
               element={
                 <ProtectedUnAuthRoute
                   component={Profile}

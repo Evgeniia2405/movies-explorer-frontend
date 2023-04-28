@@ -16,8 +16,8 @@ function Header({ loggedIn }) {
   return (
     <>
       <div
-        className={
-          location.pathname === "/movies" || location.pathname === "/profile" || location.pathname === "/saved-movies" || location.pathname === "/"
+        className={ 
+          (loggedIn && location.pathname === "/movies" ) || (loggedIn && location.pathname === "/profile") || (loggedIn && location.pathname === "/saved-movies") || (location.pathname === "/")
             ? "header header_active"
             : "header"
         }
