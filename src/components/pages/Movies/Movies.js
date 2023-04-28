@@ -13,8 +13,10 @@ function Movies({ countCards }) {
   const textSearchLS = localStorage.getItem("textSearch");
   const isShortsLS = localStorage.getItem("isShorts");
   const [isLoading, setIsLoading] = useState(false);
-  const [value, setValue] = useState(textSearchLS);
-  const [filteredMovies, setFilteredMovies] = useState(moviesFoundLS);
+  const [value, setValue] = useState(textSearchLS ? textSearchLS : "");
+  const [filteredMovies, setFilteredMovies] = useState(
+    moviesFoundLS ? moviesFoundLS : []
+  );
   const [currentMovies, setCurrentMovies] = useState([]);
   const [savedMovies, setSavedMovies] = useState([]);
   const [isShorts, setIsShorts] = useState(false);
