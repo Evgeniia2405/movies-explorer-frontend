@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Footer from "../../Footer/Footer";
 import MoviesCardList from "../../MoviesCardList/MoviesCardList";
 import SearchForm from "../../SearchForm/SearchForm";
@@ -8,8 +8,6 @@ import Preloader from "../../Preloader/Preloader";
 
 function SavedMovies() {
   const [value, setValue] = useState("");
-  const [initialMovies, isInitialMovies] = useState(false);
-  const [initialFilteredMovies, isInitialFilteredMovies] = useState(false);
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [currentMovies, setCurrentMovies] = useState([]);
@@ -21,71 +19,56 @@ function SavedMovies() {
 
   useEffect(() => {
     getMoviesSaved();
-    isInitialMovies(true);
   }, []);
 
-  //если в первоначальных сохраненных фильмах есть короткометражки то setChecked(true);
   useEffect(() => {
-    if (isShorts && initialMovies) {
-      setChecked(true);
+    if (filteredMovies.length === 0) {
+      setOnSuccess(false);
     }
-  }, [initialMovies, isShorts]);
+  }, [filteredMovies]);
 
-  //если в первоначальных отфильтрованных фильмах есть короткометражки то setChecked(true);
-  useEffect(() => {
-    if (isShorts && initialFilteredMovies) {
-      setChecked(true);
+  const renderFilteredMovies = useCallback(() => {
+    if (checked) {
+      if (savedMovies.length > 0) {
+        if (isShorts) {
+          setCurrentMovies(
+            filteredMovies.filter((movie) => movie.duration <= 40)
+          );
+        }
+      }
     }
-  }, [initialFilteredMovies, isShorts]);
+    if (!checked) {
+      setCurrentMovies(filteredMovies);
+    }
+  }, [checked, savedMovies, filteredMovies, isShorts]);
+
+  const renderSavedMovies = useCallback(() => {
+    if (checked) {
+      if (savedMovies.length > 0) {
+        if (isShorts) {
+          setCurrentMovies(savedMovies.filter((movie) => movie.duration <= 40));
+        }
+      }
+    }
+    if (!checked) {
+      setCurrentMovies(savedMovies);
+    }
+  }, [checked, savedMovies, isShorts]);
 
   //в случае если удаляются фильмы из отфильтрованных, то показывать отфильтрованные фильмы до тех пор пока они есть
   useEffect(() => {
-    if (onSuccess) {
-      if (!checked) {
-        if (savedMovies.length > 0) {
-          if (isShorts) {
-            setCurrentMovies(
-              filteredMovies.filter((movie) => movie.duration <= 40)
-            );
-          } else {
-            setCurrentMovies(filteredMovies);
-            //если удалены все короткометражки, то переключаемся на оставшиеся отфильтрованные фильмы
-          }
-        } else {
-          setCurrentMovies([]);
-          setSearchMessage("Фильмы не найдены");
-        }
-      }
-      if (checked) {
-        setCurrentMovies(filteredMovies);
-      }
-    } else {
-      setCurrentMovies([]);
+    if (onSuccess && searchMessage === " ") {
+      renderFilteredMovies();
     }
-  }, [filteredMovies, isShorts, checked, onSuccess, savedMovies.length]);
+  }, [onSuccess, searchMessage, renderFilteredMovies]);
 
   //в случае если удаляются фильмы из всех короткометражек, то оставаться в короткометражках пока они есть
   // если короткометражки закончились, то переключится на оставшиеся сохраненные фильмы
   useEffect(() => {
     if (!onSuccess && searchMessage === " ") {
-      if (!checked) {
-        if (savedMovies.length > 0) {
-          if (isShorts) {
-            setCurrentMovies(
-              savedMovies.filter((movie) => movie.duration <= 40)
-            );
-          } else {
-            setCurrentMovies(savedMovies);
-          }
-        } else {
-          setCurrentMovies([]);
-        }
-      }
-      if (checked) {
-        setCurrentMovies(savedMovies);
-      }
+      renderSavedMovies();
     }
-  }, [savedMovies, isShorts, checked, onSuccess, searchMessage]);
+  }, [onSuccess, searchMessage, renderSavedMovies]);
 
   function getMoviesSaved() {
     setIsLoading(true);
@@ -96,12 +79,12 @@ function SavedMovies() {
           setSavedMovies(data);
           checkIsShortsMovies(data);
           if (value && value !== " " && filteredMovies.length > 0) {
-            isInitialFilteredMovies(false);
             filterMovies(data, value);
           }
         } else {
           setCurrentMovies([]);
           setSavedMovies([]);
+          setFilteredMovies([]);
           setIsShorts(false);
           setChecked(false);
         }
@@ -128,27 +111,27 @@ function SavedMovies() {
     }
   }
 
+  function renderMovies(movies) {
+    if (isShorts && !checked) {
+      const shotsMovies = movies.filter((movie) => movie.duration <= 40);
+      setCurrentMovies(shotsMovies);
+      setChecked(true);
+    }
+    if (isShorts && checked) {
+      setCurrentMovies(movies);
+      setChecked(false);
+    }
+    if (!isShorts && !checked) {
+      setSearchMessage("Короткометражки не найдены");
+      setChecked(false);
+    }
+  }
+
   function handleToggle() {
     if (filteredMovies.length > 0) {
-      if (checked) {
-        const shotsMovies = filteredMovies.filter(
-          (movie) => movie.duration <= 40
-        );
-        setCurrentMovies(shotsMovies);
-        setChecked(false);
-      } else {
-        setCurrentMovies(filteredMovies);
-        setChecked(true);
-      }
+      renderMovies(filteredMovies);
     } else {
-      if (checked) {
-        const shotsMovies = savedMovies.filter((movie) => movie.duration <= 40);
-        setCurrentMovies(shotsMovies);
-        setChecked(false);
-      } else {
-        setCurrentMovies(savedMovies);
-        setChecked(true);
-      }
+      renderMovies(savedMovies);
     }
   }
 
@@ -167,6 +150,7 @@ function SavedMovies() {
       setOnSuccess(false);
       setSearchMessage("Фильмы не найдены");
       setCurrentMovies([]);
+      setFilteredMovies([]);
       setIsShorts(false);
       setChecked(false);
     }
@@ -177,7 +161,6 @@ function SavedMovies() {
     setChecked(false);
     if (savedMovies.length > 0) {
       if (value && value !== " ") {
-        isInitialFilteredMovies(true);
         filterMovies(savedMovies, value);
       } else {
         setSearchMessage("Нужно ввести ключевое слово");
@@ -196,8 +179,8 @@ function SavedMovies() {
     api
       .deleteMovie(data._id)
       .then(() => {
-        isInitialMovies(false);
         getMoviesSaved();
+        setSearchMessage(" ");
       })
       .catch((err) => {
         setSearchMessage(`Ошибка при удалении фильма из избранных: ${err}`);
