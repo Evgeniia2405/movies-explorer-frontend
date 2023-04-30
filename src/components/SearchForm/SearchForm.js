@@ -23,7 +23,6 @@ function SearchForm(props) {
         <>
           <label className="checkbox__label" htmlFor="checkbox">
             <input
-              disabled={!props.isShorts}
               checked={props.checked}
               onChange={props.chengeCheckbox}
               className="checkbox__inp"

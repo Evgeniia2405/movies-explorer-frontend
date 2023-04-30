@@ -12,6 +12,7 @@ function Movies({ countCards }) {
   const moviesFoundLS = JSON.parse(localStorage.getItem("moviesFound"));
   const textSearchLS = localStorage.getItem("textSearch");
   const isShortsLS = localStorage.getItem("isShorts");
+  const isCheckedLS = localStorage.getItem("isChecked");
   const [isLoading, setIsLoading] = useState(false);
   const [value, setValue] = useState(textSearchLS ? textSearchLS : "");
   const [filteredMovies, setFilteredMovies] = useState(
@@ -46,6 +47,7 @@ function Movies({ countCards }) {
       .getSavedMovies()
       .then((data) => {
         setSavedMovies(data);
+        setSearchMessage(" ");
       })
       .catch((err) => {
         setSearchMessage(`Ошибка: ${err}`);
@@ -59,11 +61,21 @@ function Movies({ countCards }) {
   useEffect(() => {
     if (allMoviesLS) {
       if (moviesFoundLS) {
-        setCurrentMovies(moviesFoundLS.slice(0, countCards.countRender));
-        if (isShortsLS) {
+        if (isShortsLS && isCheckedLS) {
+          const shotsMoviesLS = moviesFoundLS.filter(
+            (movie) => movie.duration <= 40
+          );
+          renderMovies(shotsMoviesLS);
           setChecked(true);
           setIsShorts(true);
-        } else {
+        }
+        if (isShortsLS && !isCheckedLS) {
+          setCurrentMovies(moviesFoundLS.slice(0, countCards.countRender));
+          setChecked(false);
+          setIsShorts(true);
+        }
+        if (!isShortsLS) {
+          setCurrentMovies(moviesFoundLS.slice(0, countCards.countRender));
           setChecked(false);
           setIsShorts(false);
         }
@@ -76,6 +88,16 @@ function Movies({ countCards }) {
   useEffect(() => {
     getMoviesSaved();
   }, []);
+
+  // если поисковая строка пустая то очищаем поле результатов
+  useEffect(() => {
+    if (value.length === 0) {
+      setCurrentMovies([]);
+      setChecked(false);
+      setIsShorts(false);
+      setOnMore(false);
+    }
+  }, [value]);
 
   //проверка для визуализации кнопки "еще" при измении списка текущих фильмов
   useEffect(() => {
@@ -92,7 +114,7 @@ function Movies({ countCards }) {
   //если найденных фильмов больше чем отрисовано на странице, то показываем кнопку "еще"
   //проверка для полнометражных и короткометражных фильмов
   function checkMore(movies) {
-    if (checked) {
+    if (!checked) {
       if (movies.length < moviesFoundLS.length) {
         setOnMore(true);
       } else {
@@ -114,25 +136,32 @@ function Movies({ countCards }) {
   function checkIsShortsMovies(movies) {
     if (movies.some((movie) => movie.duration <= 40)) {
       localStorage.setItem("isShorts", true);
-      setChecked(true);
       setIsShorts(true);
     } else {
       localStorage.removeItem("isShorts");
+      localStorage.removeItem("isChecked");
       setChecked(false);
       setIsShorts(false);
     }
   }
 
   function handleToggle() {
-    if (checked) {
+    if (isShorts && !checked) {
       const shotsMoviesLS = moviesFoundLS.filter(
         (movie) => movie.duration <= 40
       );
       renderMovies(shotsMoviesLS);
-      setChecked(false);
-    } else {
-      renderMovies(moviesFoundLS);
       setChecked(true);
+      localStorage.setItem("isChecked", true);
+    }
+    if (isShorts && checked) {
+      renderMovies(moviesFoundLS);
+      setChecked(false);
+      localStorage.removeItem("isChecked");
+    }
+    if (!isShorts && !checked) {
+      setSearchMessage("Короткометражки не найдены");
+      setChecked(false);
     }
   }
 
@@ -157,6 +186,7 @@ function Movies({ countCards }) {
     } else {
       setOnSuccess(false);
       setSearchMessage("Фильмы не найдены");
+      setIsShorts(false);
       setCurrentMovies([]);
       setOnMore(false);
     }
