@@ -62,6 +62,14 @@ function App() {
   useEffect(() => {
     if (localStorage.getItem("jwt")) {
       handleCheckToken();
+    } else {
+      if (
+        location.pathname === "/saved-movies" ||
+        location.pathname === "/movies" ||
+        location.pathname === "/profile"
+      ) {
+        navigate("/");
+      }
     }
   }, []);
 
@@ -86,6 +94,12 @@ function App() {
         if (res) {
           setCurrentUser(res);
           setLoggedIn(true);
+          if (
+            location.pathname === "/signup" ||
+            location.pathname === "/signin"
+          ) {
+            navigate("/");
+          }
         }
       })
       .catch((err) => {
