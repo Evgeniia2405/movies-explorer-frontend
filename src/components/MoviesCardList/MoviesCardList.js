@@ -1,23 +1,37 @@
 import React from "react";
 import "./MoviesCardList.css";
-import { initialCards } from "../../utils/initialCards";
 import MoviesCard from "../MoviesCard/MoviesCard";
 
-function MoviesCardList(props) {
+function MoviesCardList({
+  movies,
+  savedMovies,
+  onMore,
+  onClickMore,
+  onCardClick,
+}) {
   return (
     <div className="cards__wrapper">
       <ul className="cards__list">
-        {initialCards.map((data) => (
+        {movies.map((data) => (
           <MoviesCard
-            key={ data.movieId }
-            card={ data }
-            // onCardClick={props.onCardClick}
-            // onCardLike={props.handleCardLike}
-            // onCardDelete={props.handleCardDelete}
+            key={data.id || data._id}
+            card={data}
+            onCardClick={onCardClick}
+            isSaved={
+              savedMovies
+                ? savedMovies.some((i) => i.movieId === data.id)
+                : false
+            }
           />
         ))}
       </ul>
-      <button type="button" className="cards__btn">Ещё</button>
+      <button
+        onClick={onClickMore}
+        type="button"
+        className={onMore ? "cards__btn" : "cards__btn_disactive"}
+      >
+        Ещё
+      </button>
     </div>
   );
 }

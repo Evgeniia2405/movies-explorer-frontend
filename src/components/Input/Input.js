@@ -3,7 +3,6 @@ import "./Input.css";
 
 function Input(props) {
 
-
   return (
     <>
       <label className="input__label" htmlFor={props.name}>{props.title}

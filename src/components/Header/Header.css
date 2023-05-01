@@ -1,10 +1,14 @@
 .header {
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: space-between;
   width: 91.25%;
   margin: 18px auto;
   color: #ffffff;
+}
+
+.header_active {
+  display: flex;
 }
 
 .header__movies {

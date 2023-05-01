@@ -32,7 +32,6 @@
   margin: 28px auto 30px;
   padding: 0;
   list-style: none;
-  position: relative;
   display: flex;
   flex-direction: column;
   gap: 9px;

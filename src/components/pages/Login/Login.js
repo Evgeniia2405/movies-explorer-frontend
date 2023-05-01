@@ -1,102 +1,75 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Form from "../../Form/Form";
 import Input from "../../Input/Input";
 import Sign from "../../Sign/Sign";
+import { useInput } from "../../../hooks/useForm";
+import Preloader from "../../Preloader/Preloader";
 
-function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+function Login({ onLogin, serverMessage, isLoading }) {
+  const email = useInput("", { isEmpty: true, isEmail: true });
+  const password = useInput("", { isEmpty: true, minLength: 3 });
 
-  const [emailDirty, setEmailDirty] = useState(false);
-  const [passwordDirty, setPasswordDirty] = useState(false);
-
-  const [emailError, setEmailError] = useState("Обязательное поле");
-  const [passwordError, setPasswordError] = useState("Что-то пошло не так...");
-
-  const [formValid, setFormValid] = useState(false);
-
-  useEffect(() => {
-    if (emailError || passwordError) {
-      setFormValid(false);
-    } else {
-      setFormValid(true);
-    }
-  }, [emailError, passwordError]);
-
-  const emailHandler = (e) => {
-    setEmail(e.target.value);
-    const re =
-      /^(([^<>()[\]\\.,;:\s@]+(\.[^<>()[\]\\.,;:\s@"]+)*))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (!re.test(String(e.target.value).toLowerCase())) {
-      setEmailError("Некорректный email");
-    } else {
-      setEmailError("");
-    }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onLogin(email.value, password.value);
   };
 
-  const passwordHandler = (e) => {
-    setPassword(e.target.value);
-    if (e.target.value.length < 6) {
-      setPasswordError("Пароль должен быть более 6 знаков");
-      if (!e.target.value) {
-        setPasswordError("Обязательное поле");
-      }
-    } else {
-      setPasswordError("");
-    }
-  };
-
-  const blurHandler = (e) => {
-    switch (e.target.name) {
-      case "email":
-        setEmailDirty(true);
-        break;
-      case "password":
-        setPasswordDirty(true);
-        break;
-      default:
-      // do nothing
-    }
-  };
   return (
     <>
-    <Sign
-      text="Ещё не зарегистрированы? "
-      path="/signup"
-      link="Регистрация"
-      children={
-        <Form
-          title="Рады видеть!"
-          children={
-            <>
-              <Input
-                title="E-mail"
-                name="email"
-                value={email}
-                onChange={(e) => emailHandler(e)}
-                onBlur={(e) => blurHandler(e)}
-                dirty={emailDirty}
-                error={emailError}
-                type={"text"}
-              />
-              <Input
-                title="Пароль"
-                name="password"
-                value={password}
-                onChange={(e) => passwordHandler(e)}
-                onBlur={(e) => blurHandler(e)}
-                dirty={passwordDirty}
-                error={passwordError}
-                type={"password"}
-              />
-            </>
-          }
-          formValid={formValid}
-          button="Войти"
-        />
-      }
-    />
-  </>
+      <Sign
+        text="Ещё не зарегистрированы? "
+        path="/signup"
+        link="Регистрация"
+        children={
+          <Form
+            title="Рады видеть!"
+            onSubmit={handleSubmit}
+            serverMessage={serverMessage}
+            children={
+              <>
+                <Input
+                  title="E-mail"
+                  name="email"
+                  value={email.value}
+                  onChange={(e) => email.onChange(e)}
+                  onBlur={(e) => email.onBlur(e)}
+                  dirty={email.isDirty}
+                  error={
+                    (email.isDirty && email.isEmpty.state
+                      ? email.isEmpty.textError
+                      : "") ||
+                    (email.isDirty && email.emailError.state
+                      ? email.emailError.textError
+                      : "")
+                  }
+                  type={"text"}
+                />
+                <Input
+                  title="Пароль"
+                  name="password"
+                  value={password.value}
+                  onChange={(e) => password.onChange(e)}
+                  onBlur={(e) => password.onBlur(e)}
+                  dirty={password.isDirty}
+                  error={
+                    (password.isDirty && password.isEmpty.state
+                      ? email.isEmpty.textError
+                      : "") ||
+                    (password.isDirty && password.minLengthError.state
+                      ? password.minLengthError.textError
+                      : "")
+                  }
+                  type={"password"}
+                />
+              </>
+            }
+            formValid={email.inputValid && password.inputValid}
+            button="Войти"
+          />
+        }
+      />
+      <Preloader isLoading={isLoading} />
+    </>
   );
 }
 
