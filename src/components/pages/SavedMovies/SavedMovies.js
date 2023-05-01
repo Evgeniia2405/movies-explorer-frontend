@@ -5,6 +5,7 @@ import SearchForm from "../../SearchForm/SearchForm";
 import "./SavedMovies.css";
 import api from "../../../utils/MainApi";
 import Preloader from "../../Preloader/Preloader";
+const { DURATION_SHORT_MOVIE } = require("../../../utils/constants");
 
 function SavedMovies() {
   const [value, setValue] = useState("");
@@ -32,7 +33,9 @@ function SavedMovies() {
       if (savedMovies.length > 0) {
         if (isShorts) {
           setCurrentMovies(
-            filteredMovies.filter((movie) => movie.duration <= 40)
+            filteredMovies.filter(
+              (movie) => movie.duration <= DURATION_SHORT_MOVIE
+            )
           );
         }
       }
@@ -46,7 +49,11 @@ function SavedMovies() {
     if (checked) {
       if (savedMovies.length > 0) {
         if (isShorts) {
-          setCurrentMovies(savedMovies.filter((movie) => movie.duration <= 40));
+          setCurrentMovies(
+            savedMovies.filter(
+              (movie) => movie.duration <= DURATION_SHORT_MOVIE
+            )
+          );
         }
       }
     }
@@ -103,7 +110,7 @@ function SavedMovies() {
   }
 
   function checkIsShortsMovies(movies) {
-    if (movies.some((movie) => movie.duration <= 40)) {
+    if (movies.some((movie) => movie.duration <= DURATION_SHORT_MOVIE)) {
       setIsShorts(true);
     } else {
       setIsShorts(false);
@@ -113,7 +120,9 @@ function SavedMovies() {
 
   function renderMovies(movies) {
     if (isShorts && !checked) {
-      const shotsMovies = movies.filter((movie) => movie.duration <= 40);
+      const shotsMovies = movies.filter(
+        (movie) => movie.duration <= DURATION_SHORT_MOVIE
+      );
       setCurrentMovies(shotsMovies);
       setChecked(true);
     }

@@ -6,6 +6,7 @@ import moviesApi from "../../../utils/MoviesApi";
 import api from "../../../utils/MainApi";
 import "./Movies.css";
 import Preloader from "../../Preloader/Preloader";
+const { DURATION_SHORT_MOVIE } = require("../../../utils/constants");
 
 function Movies({ countCards }) {
   const allMoviesLS = JSON.parse(localStorage.getItem("allMovies"));
@@ -63,7 +64,7 @@ function Movies({ countCards }) {
       if (moviesFoundLS) {
         if (isShortsLS && isCheckedLS) {
           const shotsMoviesLS = moviesFoundLS.filter(
-            (movie) => movie.duration <= 40
+            (movie) => movie.duration <= DURATION_SHORT_MOVIE
           );
           renderMovies(shotsMoviesLS);
           setChecked(true);
@@ -123,7 +124,8 @@ function Movies({ countCards }) {
     } else {
       if (
         movies.length <
-        moviesFoundLS.filter((movie) => movie.duration <= 40).length
+        moviesFoundLS.filter((movie) => movie.duration <= DURATION_SHORT_MOVIE)
+          .length
       ) {
         setOnMore(true);
       } else {
@@ -134,7 +136,7 @@ function Movies({ countCards }) {
 
   //проверка на наличие короткометражных фильмов
   function checkIsShortsMovies(movies) {
-    if (movies.some((movie) => movie.duration <= 40)) {
+    if (movies.some((movie) => movie.duration <= DURATION_SHORT_MOVIE)) {
       localStorage.setItem("isShorts", true);
       setIsShorts(true);
     } else {
@@ -148,7 +150,7 @@ function Movies({ countCards }) {
   function handleToggle() {
     if (isShorts && !checked) {
       const shotsMoviesLS = moviesFoundLS.filter(
-        (movie) => movie.duration <= 40
+        (movie) => movie.duration <= DURATION_SHORT_MOVIE
       );
       renderMovies(shotsMoviesLS);
       setChecked(true);

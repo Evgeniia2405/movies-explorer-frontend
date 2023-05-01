@@ -12,8 +12,15 @@ import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import api from "../../utils/MainApi";
 import * as auth from "../../utils/MainAuth";
 import ProtectedUnAuthRoute from "../ProtectedRoute/ProtectedUnAuthRoute";
-import { dataСountRender } from "../../utils/dataСountRender";
 import Header from "../Header/Header";
+const {
+  NUMBER_CARDS_IN_WIDTH_1280,
+  MORE_CARDS_IN_WIDTH_1280,
+  NUMBER_CARDS_IN_WIDTH_768,
+  MORE_CARDS_IN_WIDTH_768,
+  NUMBER_CARDS_IN_WIDTH_320,
+  MORE_CARDS_IN_WIDTH_320,
+} = require("../../utils/constants");
 
 function App() {
   const [countCards, setCountCards] = useState({});
@@ -27,13 +34,22 @@ function App() {
       setWindowWidth(window.screen.width);
     };
     if (windowWidth < 675) {
-      setCountCards(dataСountRender[2]);
+      setCountCards({
+        countRender: NUMBER_CARDS_IN_WIDTH_320,
+        moreFilms: MORE_CARDS_IN_WIDTH_320,
+      });
     }
     if (windowWidth >= 675) {
-      setCountCards(dataСountRender[1]);
+      setCountCards({
+        countRender: NUMBER_CARDS_IN_WIDTH_768,
+        moreFilms: MORE_CARDS_IN_WIDTH_768,
+      });
     }
     if (windowWidth >= 1233) {
-      setCountCards(dataСountRender[0]);
+      setCountCards({
+        countRender: NUMBER_CARDS_IN_WIDTH_1280,
+        moreFilms: MORE_CARDS_IN_WIDTH_1280,
+      });
     }
     return () => {
       window.onresize = false;
