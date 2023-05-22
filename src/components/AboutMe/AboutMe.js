@@ -21,15 +21,37 @@ function AboutMe() {
               />
               <article className="student__text">
                 <h2 className="student__title">Евгения</h2>
-                <p className="student__subtitle">Фронтенд-разработчик</p>
-                <p className="student__paragraph">
-                  Я&nbsp;родилась в&nbsp;Самаре, закончила факультет двигателей
-                  летательных аппаратов СГАУ им. С.&nbsp;П.&nbsp;Королёва.
-                  Сейчас живу в&nbsp;Москве, замужем и&nbsp;у&nbsp;меня двое
-                  детей. Я&nbsp;люблю слушать музыку, а&nbsp;ещё увлекаюсь
-                  бегом. Прохожу курс по&nbsp;веб-разработке, планирую
-                  заниматься фриланс-заказами и&nbsp;найти постоянную работу.
+                <p className="student__subtitle">
+                  курс &laquo;Фронтенд-разработчик&raquo;
                 </p>
+                <p className="student__paragraph">
+                  В&nbsp;рамках учебной программы на&nbsp;курсе
+                  &laquo;Веб-разработчик&raquo; в&nbsp;Яндекс Практикуме
+                  пройдены следующие модули:
+                </p>
+                <ul className="student__list">
+                  <li className="student__item">
+                  &mdash;&nbsp;Основы HTML, CSS, JavaScript
+                  </li>
+                  <li className="student__item">
+                  &mdash;&nbsp;Расширенные возможности HTML и&nbsp;CSS
+                  </li>
+                  <li className="student__item">
+                  &mdash;&nbsp;HTML и&nbsp;CSS. Работа с&nbsp;макетом, построение сложных
+                    сеток, адаптивная верстка
+                  </li>
+                  <li className="student__item">
+                  &mdash;&nbsp;Базовый JavaScript и&nbsp;работа с&nbsp;браузером
+                  </li>
+                  <li className="student__item">
+                  &mdash;&nbsp;JavaScript непростые концепции
+                  </li>
+                  <li className="student__item">
+                  &mdash;&nbsp;Создание интерфейсов на&nbsp;React
+                  </li>
+                  <li className="student__item">&mdash;&nbsp;Основы бэкенд разработки</li>
+                  <li className="student__item">&mdash;&nbsp;Выпускной проект</li>
+                </ul>
                 <a
                   className="student__link"
                   href="https://github.com/evgeniia2405"
