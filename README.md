@@ -14,25 +14,25 @@
 - «404» несуществующая страница.
 
 ### Главная страница
-![](/image/mainpage.jpg)
+![](/src/images/image/mainpage.jpg)
 
 ### Страница «Фильмы»
-![](/image/moviespage.jpg)
+![](/src/images/image/moviespage.jpg)
 
 ### Страница «Сохранённые фильмы»
-![](/image/savedmoviespage.jpg)
+![](/src/images/image/savedmoviespage.jpg)
 
 ### Страница «Регистрация»
-![](/image/regpage.jpg)
+![](/src/images/image/regpage.jpg)
 
 ### Страница «Авторизация»
-![](/image/authpage.jpg)
+![](/src/images/image/authpage.jpg)
 
 ### Страница «Аккаунт»
-![](/image/profilepage.jpg)
+![](/src/images/image/profilepage.jpg)
 
 ### Страница «404»
-![](/image/nfoundpage.jpg)
+![](/src/images/image/nfoundpage.jpg)
 
 ## Функциональность проекта:
 ### Общее:
@@ -75,6 +75,6 @@
 
 ## Инструкция по запуску приложения локально
 - разверните сервер по инструкции описанной в репозитории [movies-explorer-api](https://github.com/Evgeniia2405/movies-explorer-api)
-- клонировать данный репозиторий с фронтендом приложения
+- клонируйте данный репозиторий с фронтендом приложения
 - выполнить команду `npm i` для установки зависимостей
 - выполнить команду `npm run start`
