@@ -1,4 +1,4 @@
-export const BASE_URL = "https://api.movies.evgenia2405.nomoredomains.work";
+export const BASE_URL = "http://localhost:3001";
 
 function getResponse(res) {
   if (!res.ok) {

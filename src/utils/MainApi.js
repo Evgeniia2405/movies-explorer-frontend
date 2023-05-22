@@ -101,7 +101,7 @@ class Api {
   }
 }
 const API_OPTIONS = {
-  url: "https://api.movies.evgenia2405.nomoredomains.work",
+  url: "http://localhost:3001",
   headers: {
     "Content-Type": "application/json",
   },
