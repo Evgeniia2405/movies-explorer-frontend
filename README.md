@@ -14,25 +14,25 @@
 - «404» несуществующая страница.
 
 ### Главная страница
-![](/src/images/image/mainpage.jpg)
+![](/src/images/mainpage.jpg)
 
 ### Страница «Фильмы»
-![](/src/images/image/moviespage.jpg)
+![](/src/images/moviespage.jpg)
 
 ### Страница «Сохранённые фильмы»
-![](/src/images/image/savedmoviespage.jpg)
+![](/src/images/savedmoviespage.jpg)
 
 ### Страница «Регистрация»
-![](/src/images/image/regpage.jpg)
+![](/src/images/regpage.jpg)
 
 ### Страница «Авторизация»
-![](/src/images/image/authpage.jpg)
+![](/src/images/authpage.jpg)
 
 ### Страница «Аккаунт»
-![](/src/images/image/profilepage.jpg)
+![](/src/images/profilepage.jpg)
 
 ### Страница «404»
-![](/src/images/image/nfoundpage.jpg)
+![](/src/images/nfoundpage.jpg)
 
 ## Функциональность проекта:
 ### Общее:
